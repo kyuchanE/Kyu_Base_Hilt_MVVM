@@ -10,7 +10,6 @@ import retrofit2.http.QueryMap
 import retrofit2.http.Url
 
 interface LotteryService {
-
     @GET(Config.LotteryService.COMMON)
     fun getLotteryCommon(
         @Query("method") method: String,

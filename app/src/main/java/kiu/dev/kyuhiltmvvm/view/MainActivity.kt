@@ -19,7 +19,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initObseve()
+        initObserve()
 
         binding.btnLottery.setOnClickListener {
             viewModel.reqLotteryData(
@@ -28,11 +28,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             )
         }
 
+        binding.btnUser.setOnClickListener {
+            viewModel.reqRandomUserData(
+                results = 3
+            )
+        }
+
     }
 
-    private fun initObseve() {
+    private fun initObserve() {
         with(viewModel) {
             lotteryData.observe(this@MainActivity) {
+                L.d("Main observe : $it")
+            }
+
+            randomUserData.observe(this@MainActivity) {
                 L.d("Main observe : $it")
             }
         }

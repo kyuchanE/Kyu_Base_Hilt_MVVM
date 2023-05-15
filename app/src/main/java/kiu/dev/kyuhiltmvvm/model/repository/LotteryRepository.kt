@@ -11,7 +11,6 @@ import javax.inject.Inject
 class LotteryRepository @Inject constructor(
     private val lotteryService: LotteryService
 ) {
-
     fun getLotteryData(
         method: String = "",
         drwNo: String = "",

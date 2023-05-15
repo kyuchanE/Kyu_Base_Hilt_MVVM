@@ -19,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.net.CookieManager
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @SuppressLint("StaticFieldLeak")
@@ -30,6 +31,14 @@ object NetworkModule {
     private const val CONNECT_TIMEOUT = 3000L // 커넥션 타임
     private const val WRITE_TIMEOUT = 3000L // 쓰기 타임
     private const val READ_TIMEOUT = 3000L // 읽기 타임
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class LotteryModule
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class RandomUserModule
 
     @Provides
     @Singleton
@@ -95,9 +104,22 @@ object NetworkModule {
      */
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
+    @LotteryModule
+    fun provideLotteryRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(Config.LotteryService.BASE_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  // Rx를 사용할 수 있도록 아답터 적용
+            .addConverterFactory(ScalarsConverterFactory.create())      // ScalarConverter 적용
+            .addConverterFactory(GsonConverterFactory.create())         // GsonConverter 적용
+            .build()
+
+    @Provides
+    @Singleton
+    @RandomUserModule
+    fun provideRandomUserRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(Config.RandomUserService.BASE_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  // Rx를 사용할 수 있도록 아답터 적용
             .addConverterFactory(ScalarsConverterFactory.create())      // ScalarConverter 적용
