@@ -2,6 +2,7 @@ package kiu.dev.kyuhiltmvvm.view
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kiu.dev.kyuhiltmvvm.R
 import kiu.dev.kyuhiltmvvm.base.BaseActivity
@@ -9,6 +10,7 @@ import kiu.dev.kyuhiltmvvm.databinding.ActivityMainBinding
 import kiu.dev.kyuhiltmvvm.utils.L
 import kiu.dev.kyuhiltmvvm.view.dialog.ResultDialog
 import kiu.dev.kyuhiltmvvm.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -41,22 +43,26 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun initObserve() {
-        with(viewModel) {
-            lotteryData.observe(this@MainActivity) {
-                L.d("Main observe : $it")
-                resultDialog = ResultDialog(this@MainActivity).apply {
-                    initContents(it.toString())
-                    initBtnClickEvent(
-                        confirmAction = { L.d("lottery confirm") },
-                        closeAction = { L.d("lottery close") }
-                    )
+        lifecycleScope.launch {
+            with(viewModel) {
+                this.lotteryData.collect { lotteryData ->
+                    L.d("Main collect lottery : $lotteryData")
+                    resultDialog = ResultDialog(this@MainActivity).apply {
+                        initContents(lotteryData.toString())
+                        initBtnClickEvent(
+                            confirmAction = { L.d("lottery confirm") },
+                            closeAction = { L.d("lottery close") }
+                        )
+                    }
                 }
             }
+        }
 
-            randomUserData.observe(this@MainActivity) {
-                L.d("Main observe : $it")
+        lifecycleScope.launch {
+            viewModel.randomUserData.collect{ randomUserData ->
+                L.d("Main collect randomUser : $randomUserData")
                 resultDialog = ResultDialog(this@MainActivity).apply {
-                    initContents(it.toString())
+                    initContents(randomUserData.toString())
                     initBtnClickEvent(
                         confirmAction = { L.d("randomUser confirm") },
                         closeAction = { L.d("randomUser close") }
@@ -64,5 +70,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }
             }
         }
+
     }
 }
