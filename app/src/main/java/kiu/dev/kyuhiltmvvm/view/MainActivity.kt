@@ -10,7 +10,15 @@ import kiu.dev.kyuhiltmvvm.databinding.ActivityMainBinding
 import kiu.dev.kyuhiltmvvm.utils.L
 import kiu.dev.kyuhiltmvvm.view.dialog.ResultDialog
 import kiu.dev.kyuhiltmvvm.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlin.system.measureTimeMillis
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -40,9 +48,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             )
         }
 
+        binding.btnTest.setOnClickListener {
+            viewModel.reqTestData()
+        }
+
     }
 
+
     private fun initObserve() {
+        // TODO chan liefcycleScope 'UNRECHANGEABLE CODE'
         lifecycleScope.launch {
             with(viewModel) {
                 this.lotteryData.collect { lotteryData ->
@@ -68,6 +82,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                         closeAction = { L.d("randomUser close") }
                     )
                 }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.oneTestData.collect{
+                L.d("Main liefcycleScope oneTestData : $it")
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.twoTestData.collect{
+                L.d("Main liefcycleScope twoTestData : $it")
             }
         }
 

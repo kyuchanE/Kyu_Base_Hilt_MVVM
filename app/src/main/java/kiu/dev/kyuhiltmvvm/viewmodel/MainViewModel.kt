@@ -8,6 +8,8 @@ import kiu.dev.kyuhiltmvvm.model.RandomUserModel
 import kiu.dev.kyuhiltmvvm.model.repository.LotteryRepository
 import kiu.dev.kyuhiltmvvm.model.repository.RandomRepository
 import kiu.dev.kyuhiltmvvm.utils.L
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -24,6 +26,12 @@ class MainViewModel @Inject constructor(
 
     private val _randomUserData = MutableSharedFlow<RandomUserModel>()
     val randomUserData= _randomUserData.asSharedFlow()
+
+    private val _oneTestData = MutableSharedFlow<Int>()
+    val oneTestData = _oneTestData.asSharedFlow()
+
+    private val _twoTestData = MutableSharedFlow<Int>()
+    val twoTestData = _twoTestData.asSharedFlow()
 
     fun reqLotteryData(
         method: String,
@@ -61,6 +69,27 @@ class MainViewModel @Inject constructor(
                     L.d("reqRandomUserDta unSuccessful : ${response.errorBody()}")
                 }
             }
+        }
+    }
+
+    fun reqTestData() {
+        viewModelScope.launch {
+            val one = async {
+                L.d("reqTestData oneTest Start...")
+                delay(3000L)
+                L.d("reqTestData oneTest Finish...")
+                return@async 1
+            }
+
+            val two = async {
+                L.d("reqTestData twoTest Start...")
+                delay(1000L)
+                L.d("reqTestData twoTest Finish...")
+                return@async 2
+            }
+
+            _oneTestData.emit(one.await() + two.await())
+
         }
     }
 }
