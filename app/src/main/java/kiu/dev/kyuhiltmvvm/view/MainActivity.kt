@@ -1,5 +1,6 @@
 package kiu.dev.kyuhiltmvvm.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +34,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding.result = ""
+
         initObserve()
 
         binding.btnLottery.setOnClickListener {
@@ -52,8 +55,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             viewModel.reqTestData()
         }
 
-    }
+        binding.btnGoSub.setOnClickListener {
+            startActivity(
+                Intent(this, SubActivity::class.java)
+            )
+        }
 
+    }
 
     private fun initObserve() {
         // TODO chan liefcycleScope 'UNRECHANGEABLE CODE'
@@ -75,6 +83,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         lifecycleScope.launch {
             viewModel.randomUserData.collect{ randomUserData ->
                 L.d("Main collect randomUser : $randomUserData")
+                binding.result = "${randomUserData.results.get(0).name.first} ${randomUserData.results.get(0).name.last}"
                 resultDialog = ResultDialog(this@MainActivity).apply {
                     initContents(randomUserData.toString())
                     initBtnClickEvent(

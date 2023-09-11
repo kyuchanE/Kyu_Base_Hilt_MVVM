@@ -24,29 +24,9 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lottery"
-                android:id="@+id/btn_lottery"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="35dp"
                 android:text="RandomUser"
                 android:id="@+id/btn_User"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:text="RandomUser"
-                android:id="@+id/btn_test"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:text="Open Sub Act"
-                android:id="@+id/btn_go_sub"/>
 
             <TextView
                 android:layout_width="wrap_content"
